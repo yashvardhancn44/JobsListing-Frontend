@@ -1,8 +1,25 @@
-import jobs from "../jobs.json";
+import { useState, useEffect } from "react";
 import JobListing from "./JobListing";
 // console.log(jobs);
 
 const JobListings = ({ isHome = false }) => {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/jobs");
+        const data = await res.json();
+        setJobs(data);
+      } catch (error) {
+        console.log("Error Fecthing data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
   const JobListings = isHome ? jobs.slice(0, 3) : jobs;
 
   return (
